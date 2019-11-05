@@ -1,35 +1,25 @@
+include ../../../system/include.mk
+
+include ../vsn.mk
+VSN=$(ERESYE_VSN)
+
+MODULES=eresye	\
+	eresye_agenda	\
+	eresye_ontology	\
+	eresye_ontology_resolver	\
+	eresye_tree_list
+
+EBIN_FILES=$(MODULES:%=../ebin/%.$(EMULATOR))
+ERLC_FLAGS+=-I../../ -I../include +debug_info
+
 #
-# Makefile
+# Targets
 #
 
-EBIN=../ebin/
-#ERLC=erlc
-BEAM=erlc -b beam -I ../include -o $(EBIN)
-YRL=erlc -W
-FIND=find
+all: $(EBIN_FILES) 
 
-.SUFFIXES: .erl .beam
-
-OBJS=\
-eresye \
-eresye_agenda \
-eresye_tree_list \
-eresye_ontology \
-eresye_ontology_resolver
-
-ERL_OBJS=$(foreach file, $(OBJS), $(EBIN)/$(file).beam)
-
-OTHER_OBJS=
-FIND=find
-
-all: $(ERL_OBJS) $(OTHER_OBJS)
-
-$(EBIN)/%.beam: %.erl
-	$(BEAM) $<
+debug:
+	$(MAKE) ERLC_FLAGS+="$(ERLC_FLAGS) +debug_info -Ddebug"
 
 clean:
-	@(cd $(EBIN); $(RM) -f *.beam)
-
-clearbak:
-	@$(FIND) . -type f -name \*~ -exec rm {} \;
-
+	rm -f $(EBIN_FILES)
