@@ -508,5 +508,5 @@ executor (EngineName) ->
 
 %% Fun = {Module, Function} or
 %% Fun = fun (...)
-execute_rule (EngineName ,{Fun, [_, Args], _, _}) ->
-  apply (Fun, [EngineName | Args]).
+execute_rule (EngineName ,{{Mod, Fun}, [_, Args], _, _}) ->
+    apply (Mod, Fun, [EngineName | Args]).
