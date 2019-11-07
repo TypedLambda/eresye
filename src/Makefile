@@ -4,7 +4,7 @@
 
 EBIN=../ebin/
 #ERLC=erlc
-BEAM=erlc -b beam -I ../include -o $(EBIN)
+BEAM=erlc -b beam +debug_info -I ../include -o $(EBIN)
 YRL=erlc -W
 FIND=find
 
