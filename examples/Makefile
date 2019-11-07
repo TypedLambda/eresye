@@ -1,29 +1,41 @@
-include ../../../system/include.mk
-
-include ../vsn.mk
-VSN=$(ERESYE_VSN)
-
-MODULES=auto	\
-	cannibals	\
-	journal_sample	\
-	phil	\
-	prodcons	\
-	relatives	\
-	sample	\
-	sieve	\
-	wine_sample
-
-EBIN_FILES=$(MODULES:%=../ebin/%.$(EMULATOR))
-ERLC_FLAGS+=-I../../ -I../include +debug_info
-
 #
-# Targets
+# Makefile
 #
 
-all: $(EBIN_FILES) 
+EBIN=./
+#ERLC=erlc
+BEAM=erlc -b beam +debug_info -I ../include -pa $(EBIN)
+YRL=erlc -W
+FIND=find
 
-debug:
-	$(MAKE) ERLC_FLAGS+="$(ERLC_FLAGS) +debug_info -Ddebug"
+.SUFFIXES: .erl .beam
+
+OBJS=\
+sample \
+auto \
+cannibals \
+sieve \
+phil \
+prodcons \
+wine_sample \
+journal_sample \
+relatives
+
+ERL_OBJS=$(foreach file, $(OBJS), $(EBIN)/$(file).beam)
+
+OTHER_OBJS=
+FIND=find
+
+all: $(ERL_OBJS) $(OTHER_OBJS)
+
+$(EBIN)/%.beam: %.erl
+	$(BEAM) $<
 
 clean:
-	rm -f $(EBIN_FILES)
+	@(cd $(EBIN); $(RM) -f *.beam)
+
+clearbak:
+	@$(FIND) . -type f -name \*~ -exec rm {} \;
+
+run:
+	erl -pa $(EBIN)
